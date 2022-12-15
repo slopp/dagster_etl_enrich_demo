@@ -4,6 +4,10 @@ This is a demo Dagster project based on the following pipeline:
 
 ![](./pipeline.png)
 
+In Dagster:
+
+![](./assets.png)
+
 This example highlights a few key pieces of Dagster:
 
 1. Source assets are used to represent the Excel file, CSV file, and SQL table. These assets are loaded via IO Managers
@@ -17,7 +21,7 @@ resources:
       filename: customers2.csv
 ```
 
-4. An API is used to enrich the data, row by row. In this example, a combination of a graph-backed asset and `DyanmicOutputs` is used to batch the data and then parallelize the enrichment. A smaller batch size equals more parallel runs _submitted_. The number of runs _actually executed_ in parallel at one time is controlled via config. For example, to run everything in sequence, select the assets and then "Shift + Click" on materialize. In the launchpad, add: 
+4. An API is used to enrich the data, row by row. In this example, a combination of a graph-backed asset and `DyanmicOutputs` is used to batch the data and then parallelize the enrichment. More batches equals more parallel runs _submitted_. The number of runs _actually executed_ in parallel at one time is controlled via config. For example, to run everything in sequence, select the assets and then "Shift + Click" on materialize. In the launchpad, add: 
 
 ```
 execution:
@@ -25,6 +29,8 @@ execution:
     multiprocess:
       max_concurrent: 1
 ```
+
+![](./parallel_runs.png)
 
 5. Secrets are loaded from AWS SecretManager using a helper function 
 

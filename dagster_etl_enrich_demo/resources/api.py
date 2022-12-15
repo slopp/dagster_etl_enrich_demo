@@ -1,11 +1,15 @@
-from dagster import resource
-import responses 
-import requests
-import pandas as pd
-import numpy as np
 import random
 
-class RawDataAPI():
+import numpy as np
+import pandas as pd
+import requests
+import responses
+from dagster import resource
+
+
+class RawDataAPI:
+    """Represents a mock data enrichment API"""
+
     def __init__(self):
         pass
 
@@ -14,17 +18,23 @@ class RawDataAPI():
         responses.get(
             # fake endpoint
             "http://api.jaffleshop.co/v1/order_details",
-
-            # random order data returned, see utils.py
-            json = pd.DataFrame({
-                "order_id": [order_id],
-                "order_center": [random.choices(["scranton", "albany", "new york"], k=1)]
-            }).to_json()
+            # adds an order center
+            json=pd.DataFrame(
+                {
+                    "order_id": [order_id],
+                    "order_center": [
+                        random.choices(["scranton", "albany", "new york"], k=1)
+                    ],
+                }
+            ).to_json(),
         )
 
-        return requests.get("http://api.jaffleshop.co/v1/order_details", params={"order_id": order_id})
-    
+        return requests.get(
+            "http://api.jaffleshop.co/v1/order_details", params={"order_id": order_id}
+        )
+
 
 @resource
 def data_api(_):
-    return RawDataAPI()    
+    """Represents a mock data enrichment API"""
+    return RawDataAPI()
