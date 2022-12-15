@@ -2,7 +2,7 @@
 
 This is a demo Dagster project based on the following pipeline:
 
-![](pipeline.png)
+![](./pipeline.png)
 
 This example highlights a few key pieces of Dagster:
 
