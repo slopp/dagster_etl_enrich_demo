@@ -18,6 +18,7 @@ from dagster import (
     graph,
     observable_source_asset,
     op,
+    graph_asset
 )
 
 # @observable_source_asset(
@@ -124,9 +125,8 @@ def get_order_center(order_id, api):
 
 
 @op(
-    out=Out(
-        asset_key=AssetKey(["ANALYTICS", "enriched_data"]),
-        io_manager_key="warehouse_io",
+    out = Out(
+        io_manager_key="warehouse_io"
     )
 )
 def concat_chunk_list(chunks) -> pd.DataFrame:
@@ -134,7 +134,9 @@ def concat_chunk_list(chunks) -> pd.DataFrame:
     return pd.concat(chunks)
 
 
-@graph
+@graph_asset(
+    key_prefix="ANALYTICS"
+)
 def enriched_data(merged_sources) -> pd.DataFrame:
     """Full enrichment process"""
     chunks = split_rows(merged_sources)
@@ -143,7 +145,8 @@ def enriched_data(merged_sources) -> pd.DataFrame:
     return concat_chunk_list(enriched_chunks)
 
 
-enriched_data = AssetsDefinition.from_graph(enriched_data, key_prefix="ANALYTICS")
+
+#enriched_data = AssetsDefinition.from_graph(enriched_data, key_prefix="ANALYTICS")
 
 # --- End Enrichment Asset Graph
 
